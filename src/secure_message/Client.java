@@ -1,34 +1,32 @@
 package secure_message;
 
-import secure_message.Room.RoomMessageListener;
-import secure_message.ClientCoreConnector.CoreRoomReplyListener;
+import connectors.ClientCoreConnector;
+import connectors.ClientCoreConnector.CoreRoomReplyListener;
+import connectors.RoomConnector.RoomOutputListener;
 
-public class Client implements RoomMessageListener {
-	
+public class Client implements RoomOutputListener {
+
 	private Room chatRoom;
 	private final ClientCoreConnector clientCoreConnector;
-	
+
 	public Client() {
 		clientCoreConnector = new ClientCoreConnector();
 		clientCoreConnector.getRoom("chat_room_1", new CoreRoomReplyListener() {
 			@Override
 			public void onCoreRoomReply(Room room) {
 				chatRoom = room;
-				chatRoom.join(Client.this);
-				chatRoom.setMessageListener(Client.this);
+				chatRoom.attachClient(Client.this);
+				chatRoom.sendTextMessage("hello");
 			}
 		});
 	}
-	
-	public void sendMessage(String message){
-		chatRoom.sendMessage(message);
+
+	@Override
+	public void onTextMessage(String message) {
+		System.out.println("client received message: " + message);
 	}
-	
-	public void onMessage(String message){
-		System.out.println(message);
-	}
-	
-	public static void main(String[] args){
+
+	public static void main(String[] args) {
 		new Client();
 	}
 }

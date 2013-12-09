@@ -70,3 +70,9 @@
 23:10:24.636 INFO  [main] - Server accepting connections on rmi://192.168.1.10:1099/
 23:10:24.638 INFO  [main] - JNDI service accepting connections on rmi://192.168.1.10:1099/
 23:10:24.639 INFO  [main] - Admin service accepting connections on rmi://192.168.1.10:1099/
+13:34:25.927 INFO  [main] - Server accepting connections on tcp://192.168.1.10:3035/
+13:34:25.942 INFO  [main] - JNDI service accepting connections on tcp://192.168.1.10:3035/
+13:34:25.947 INFO  [main] - Admin service accepting connections on tcp://192.168.1.10:3035/
+13:34:26.245 INFO  [main] - Server accepting connections on rmi://192.168.1.10:1099/
+13:34:26.354 INFO  [main] - JNDI service accepting connections on rmi://192.168.1.10:1099/
+13:34:26.356 INFO  [main] - Admin service accepting connections on rmi://192.168.1.10:1099/
