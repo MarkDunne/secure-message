@@ -7,17 +7,22 @@ import javax.jms.Message;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
 
+import secure_message.Room;
+
 public class RoomMessage implements Serializable {
 	private static final long serialVersionUID = 6762322970216000066L;
 
 	public enum Type {
-		TextMessage
+		TextMessage, PartialsPackageRequest, PartialsPackageReply, NewPartialsPackage
 	};
 
 	private final Type type;
 
 	public interface RoomMessageListener {
 		public void onTextMessage(TextMessage message);
+		public void onPartialsPackageRequest(PartialsPackageRequest partialsPackageRequest);
+		public void onPartialsPackageReply(PartialsPackageReply partialsPackageReply);
+		public void onNewPartialsPackage(NewPartialsPackage newPartialsPackage);
 	}
 
 	public RoomMessage(Type type) {
@@ -42,6 +47,29 @@ public class RoomMessage implements Serializable {
 		}
 	}
 
+	public static final class PartialsPackageRequest extends RoomMessage{
+
+		private static final long serialVersionUID = 5167834235520194642L;
+		public PartialsPackageRequest() {
+			super(Type.PartialsPackageRequest);
+		}	
+	}
+	
+	public static final class PartialsPackageReply extends RoomMessage{
+
+		private static final long serialVersionUID = 3481299120912932942L;
+		public PartialsPackageReply() {
+			super(Type.PartialsPackageReply);
+		}	
+	}
+	
+	public static final class NewPartialsPackage extends RoomMessage{
+		private static final long serialVersionUID = 7891429912001210342L;
+		public NewPartialsPackage() {
+			super(Type.NewPartialsPackage);
+		}	
+	}
+	
 	public static ObjectMessage wrap(RoomMessage roomMessage, Session session) {
 		try {
 			return session.createObjectMessage(roomMessage);
@@ -70,6 +98,15 @@ public class RoomMessage implements Serializable {
 		switch (roomMessage.getType()) {
 		case TextMessage:
 			roomMessageListener.onTextMessage((TextMessage) roomMessage);
+			break;
+		case PartialsPackageRequest:
+			roomMessageListener.onPartialsPackageRequest((PartialsPackageRequest) roomMessage);
+			break;
+		case PartialsPackageReply:
+			roomMessageListener.onPartialsPackageReply((PartialsPackageReply) roomMessage);
+			break;
+		case NewPartialsPackage:
+			roomMessageListener.onNewPartialsPackage((NewPartialsPackage) roomMessage);
 			break;
 		}
 	}
