@@ -1,11 +1,13 @@
 package connectors;
 
+import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Random;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -34,11 +36,13 @@ public class RoomConnector extends Connector implements MessageListener, RoomMes
 		public void onTextMessage(String message);
 	}
 	
-	private Cipher AEScipher;
-	private SecretKeySpec AesKey;
-	private IvParameterSpec ivParameterSpec;
-	private SecureRandom AESKeyGen;
+	private final static BigInteger INIT_AESIV = new BigInteger("76547383930716012190582141440001525853");
 	
+	private Cipher AEScipher;
+	private SecretKeySpec AESKey;
+	private BigInteger AESIV;
+	private IvParameterSpec AESIVParameterSpec;
+
 	private boolean communationSafe;
 	private final Queue<RoomUserMessage> messageQueue;
 	private final DistributedDH distributedDH;
@@ -54,9 +58,8 @@ public class RoomConnector extends Connector implements MessageListener, RoomMes
 		distributedDH.addClientToRoom();
 		
 		 try {
-			AESKeyGen = new SecureRandom();
+			AESIV = INIT_AESIV; 
 			AEScipher = Cipher.getInstance("AES/CTR/PKCS5Padding");
-			makeNewKey();
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
 			e.printStackTrace();
 		}
@@ -65,6 +68,8 @@ public class RoomConnector extends Connector implements MessageListener, RoomMes
 	@Override
 	public void onMessage(Message message) {
 		RoomMessage.unwrap(message, this);
+		AESIV.add(BigInteger.ONE);
+		AESIVParameterSpec = new IvParameterSpec(AESIV.toByteArray());
 	}
 
 	public void sendMessage(RoomUserMessage message){
@@ -83,7 +88,7 @@ public class RoomConnector extends Connector implements MessageListener, RoomMes
 	
 	public RoomUserMessage encrypt(RoomUserMessage message){
 		try {
-			AEScipher.init(Cipher.ENCRYPT_MODE, AesKey, ivParameterSpec);
+			AEScipher.init(Cipher.ENCRYPT_MODE, AESKey, AESIVParameterSpec);
 			final byte[] encryptedContent = AEScipher.doFinal(message.getContent());
 			message.setContent(encryptedContent);
 			return message;
@@ -95,7 +100,7 @@ public class RoomConnector extends Connector implements MessageListener, RoomMes
 	
 	public <T extends RoomUserMessage> T decrypt(T message){
 		try {
-			AEScipher.init(Cipher.DECRYPT_MODE, AesKey, ivParameterSpec);
+			AEScipher.init(Cipher.DECRYPT_MODE, AESKey, AESIVParameterSpec);
 			final byte[] encryptedContent = AEScipher.doFinal(message.getContent());
 			message.setContent(encryptedContent);
 			return message;
@@ -140,19 +145,13 @@ public class RoomConnector extends Connector implements MessageListener, RoomMes
 	public void setCommunicationSafe(boolean communicationSafe){
 		this.communationSafe = communicationSafe;
 		if(communicationSafe){
-			AESKeyGen = new SecureRandom(distributedDH.getSharedKey().toByteArray());
-			makeNewKey();
+			System.out.println("shared key: " + distributedDH.getSharedKey());
+			AESIV = new BigInteger("76547383930716012190582141440001525853");
+			AESKey = new SecretKeySpec(distributedDH.getSharedKey().toByteArray(), "AES");
+			AESIVParameterSpec = new IvParameterSpec(AESIV.toByteArray());
 			while(!messageQueue.isEmpty()){
 				sendMessage(messageQueue.remove());
 			}
 		}
-	}
-	
-	public void makeNewKey(){
-		byte[] genBytes = new byte[16];
-		AESKeyGen.nextBytes(genBytes);
-		AesKey = new SecretKeySpec(genBytes, "AES");
-		AESKeyGen.nextBytes(genBytes);
-		ivParameterSpec = new IvParameterSpec(genBytes);
 	}
 }
