@@ -43,7 +43,6 @@ public class DistributedDH {
 		roomConnector.setCommunicationSafe(false);
 		if(hasLatestPartialSet){
 			hasLatestPartialSet = false;
-			System.out.println("returning set of size: " + knownPartials.size());
 			roomConnector.sendMessage(new PartialsPackageReply(knownPartials));
 		}
 	}

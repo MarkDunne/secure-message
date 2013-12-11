@@ -53,16 +53,15 @@ public class RoomConnector extends Connector implements MessageListener, RoomMes
 		super(roomName);
 		this.communationSafe = false;
 		this.roomOutputListener = roomOutputListener;	
-		this.messageQueue = new LinkedList<RoomUserMessage>();
-		distributedDH = new DistributedDH(this);
-		distributedDH.addClientToRoom();
-		
-		 try {
+		this.messageQueue = new LinkedList<RoomUserMessage>();		
+		try {
 			AESIV = INIT_AESIV; 
 			AEScipher = Cipher.getInstance("AES/CTR/PKCS5Padding");
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
 			e.printStackTrace();
 		}
+		distributedDH = new DistributedDH(this);
+		distributedDH.addClientToRoom();
 	}
 
 	@Override
@@ -124,7 +123,6 @@ public class RoomConnector extends Connector implements MessageListener, RoomMes
 		message = decrypt(message);
 		String decryptedMessage = new String(message.getContent());
 		roomOutputListener.onTextMessage(decryptedMessage);
-		//makeNewKey();
 	}
 
 	@Override
@@ -145,7 +143,6 @@ public class RoomConnector extends Connector implements MessageListener, RoomMes
 	public void setCommunicationSafe(boolean communicationSafe){
 		this.communationSafe = communicationSafe;
 		if(communicationSafe){
-			System.out.println("shared key: " + distributedDH.getSharedKey());
 			AESIV = new BigInteger("76547383930716012190582141440001525853");
 			AESKey = new SecretKeySpec(distributedDH.getSharedKey().toByteArray(), "AES");
 			AESIVParameterSpec = new IvParameterSpec(AESIV.toByteArray());

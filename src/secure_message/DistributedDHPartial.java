@@ -30,4 +30,9 @@ public class DistributedDHPartial implements Serializable {
 	public BigInteger getValue() {
 		return partialKey;
 	}
+	
+	@Override
+	public String toString() {
+		return getValue().toString();
+	}
 }
