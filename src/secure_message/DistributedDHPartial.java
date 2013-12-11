@@ -6,28 +6,28 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class DistributedDHPartial implements Serializable {
-	public final static BigInteger p = new BigInteger("97926039674283420617920074898555811232815470289823327318349147792084789067861");
-	public final static BigInteger g = new BigInteger("20365849262411751799619042098103950515763488105130003440224273615278141546108");
+	public final static BigInteger p = new BigInteger("93230951774919133788312974160275410031");
+	public final static BigInteger g = new BigInteger("7594284192988171614460672999940993755");
 
 	private BigInteger partialKey;
-	private Set<Integer> contribtingClients;
+	private Set<BigInteger> contribtingClients;
 	private static final long serialVersionUID = 1L;
 
-	public DistributedDHPartial(Integer numClients) {
+	public DistributedDHPartial() {
 		this.partialKey = g;
-		this.contribtingClients = new HashSet<Integer>();
+		this.contribtingClients = new HashSet<BigInteger>();
 	}
 
-	public void applyPrivateKey(BigInteger privateKey, Integer clientId) {
+	public void applyPrivateKey(BigInteger privateKey, BigInteger clientId) {
 		partialKey = partialKey.modPow(privateKey, p);
 		contribtingClients.add(clientId);
 	}
 
-	public boolean hasClientContributed(Integer clientId) {
+	public boolean hasClientContributed(BigInteger clientId) {
 		return contribtingClients.contains(clientId);
 	}
 
-	public BigInteger getPartialValue() {
+	public BigInteger getValue() {
 		return partialKey;
 	}
 }

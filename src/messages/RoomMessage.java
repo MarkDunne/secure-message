@@ -1,17 +1,34 @@
 package messages;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
 
-import secure_message.Room;
+import secure_message.DistributedDHPartial;
 
-public class RoomMessage implements Serializable {
+public abstract class RoomMessage implements Serializable {
 	private static final long serialVersionUID = 6762322970216000066L;
 
+	public static abstract class RoomUserMessage extends RoomMessage{
+		private static final long serialVersionUID = 3920292935322079450L;
+		public RoomUserMessage(Type type) {
+			super(type);
+		}
+		public abstract byte[] getContent();
+		public abstract void setContent(byte[] content);
+	}
+	
+	public static abstract class RoomManagementMessage extends RoomMessage{
+		private static final long serialVersionUID = 3920292935322079450L;
+		public RoomManagementMessage(Type type) {
+			super(type);
+		}
+	}
+	
 	public enum Type {
 		TextMessage, PartialsPackageRequest, PartialsPackageReply, NewPartialsPackage
 	};
@@ -33,21 +50,23 @@ public class RoomMessage implements Serializable {
 		return type;
 	}
 
-	public static final class TextMessage extends RoomMessage {
+	public static final class TextMessage extends RoomUserMessage {
 		private static final long serialVersionUID = 4976460046239042843L;
-		private final String content;
+		private byte[] content;
 
-		public TextMessage(String content) {
+		public TextMessage(byte[] content) {
 			super(Type.TextMessage);
 			this.content = content;
 		}
-
-		public String getContent() {
+		public byte[] getContent() {
 			return content;
+		}
+		public void setContent(byte[] content){
+			this.content = content;
 		}
 	}
 
-	public static final class PartialsPackageRequest extends RoomMessage{
+	public static final class PartialsPackageRequest extends RoomManagementMessage{
 
 		private static final long serialVersionUID = 5167834235520194642L;
 		public PartialsPackageRequest() {
@@ -55,19 +74,30 @@ public class RoomMessage implements Serializable {
 		}	
 	}
 	
-	public static final class PartialsPackageReply extends RoomMessage{
+	public static final class PartialsPackageReply extends RoomManagementMessage{
 
 		private static final long serialVersionUID = 3481299120912932942L;
-		public PartialsPackageReply() {
+		private final List<DistributedDHPartial> partials;
+		public PartialsPackageReply(List<DistributedDHPartial> partials) {
 			super(Type.PartialsPackageReply);
+			this.partials = partials;
 		}	
+		public List<DistributedDHPartial> getPartials() {
+			return partials;
+		}
 	}
 	
-	public static final class NewPartialsPackage extends RoomMessage{
+	public static final class NewPartialsPackage extends RoomManagementMessage{
 		private static final long serialVersionUID = 7891429912001210342L;
-		public NewPartialsPackage() {
+		private final List<DistributedDHPartial> partials;
+		public NewPartialsPackage(List<DistributedDHPartial> partials) {
 			super(Type.NewPartialsPackage);
+			this.partials = partials;
 		}	
+		public List<DistributedDHPartial> getPartials() {
+			return partials;
+		}
+		
 	}
 	
 	public static ObjectMessage wrap(RoomMessage roomMessage, Session session) {

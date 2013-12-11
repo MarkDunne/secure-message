@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-2013-12-10 21:54:14.992 GMT:
- Booting Derby version The Apache Software Foundation - Apache Derby - 10.1.1.0 - (208786): instance c013800d-0142-de80-d695-0000029e881a
+2013-12-11 15:35:17.021 GMT:
+ Booting Derby version The Apache Software Foundation - Apache Derby - 10.1.1.0 - (208786): instance c013800d-0142-e24c-3e79-0000029e881a
 on database directory C:\Dropbox\college\eclipse_workspace\SecureMessage\openjms\db\openjmsdb 
 
 Database Class Loader started - derby.database.classpath=''
