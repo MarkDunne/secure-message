@@ -54,6 +54,7 @@ public class Server implements CoreRoomRequestListener {
 		}
 		final GetRoomReply reply = new GetRoomReply(activeRooms.get(roomName));
 		serverCoreConnector.sendMessage(reply);
+		activeRooms.get(roomName).setIsEmpty(false);
 	}
 
 	public static void main(String[] args) {

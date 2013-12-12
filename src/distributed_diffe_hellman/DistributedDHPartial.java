@@ -1,4 +1,4 @@
-package secure_message;
+package distributed_diffe_hellman;
 
 import java.io.Serializable;
 import java.math.BigInteger;

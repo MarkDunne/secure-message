@@ -100,3 +100,9 @@
 20:44:50.201 INFO  [main] - Server accepting connections on rmi://192.168.1.10:1099/
 20:44:50.202 INFO  [main] - JNDI service accepting connections on rmi://192.168.1.10:1099/
 20:44:50.203 INFO  [main] - Admin service accepting connections on rmi://192.168.1.10:1099/
+00:22:57.834 INFO  [main] - Server accepting connections on tcp://10.0.0.11:3035/
+00:22:57.834 INFO  [main] - JNDI service accepting connections on tcp://10.0.0.11:3035/
+00:22:57.834 INFO  [main] - Admin service accepting connections on tcp://10.0.0.11:3035/
+00:22:57.897 INFO  [main] - Server accepting connections on rmi://10.0.0.11:1099/
+00:22:58.021 INFO  [main] - JNDI service accepting connections on rmi://10.0.0.11:1099/
+00:22:58.021 INFO  [main] - Admin service accepting connections on rmi://10.0.0.11:1099/

@@ -8,7 +8,7 @@ import javax.jms.Message;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
 
-import secure_message.DistributedDHPartial;
+import distributed_diffe_hellman.DistributedDHPartial;
 
 public abstract class RoomMessage implements Serializable {
 	private static final long serialVersionUID = 6762322970216000066L;

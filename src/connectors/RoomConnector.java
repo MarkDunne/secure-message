@@ -4,10 +4,8 @@ import java.math.BigInteger;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Random;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -20,6 +18,7 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 
+import distributed_diffe_hellman.DistributedDH;
 import messages.RoomMessage;
 import messages.RoomMessage.NewPartialsPackage;
 import messages.RoomMessage.PartialsPackageReply;
@@ -28,7 +27,6 @@ import messages.RoomMessage.RoomManagementMessage;
 import messages.RoomMessage.RoomMessageListener;
 import messages.RoomMessage.RoomUserMessage;
 import messages.RoomMessage.TextMessage;
-import secure_message.DistributedDH;
 
 public class RoomConnector extends Connector implements MessageListener, RoomMessageListener {
 
@@ -49,7 +47,7 @@ public class RoomConnector extends Connector implements MessageListener, RoomMes
 	private final RoomOutputListener roomOutputListener;
 	
 	
-	public RoomConnector(String roomName, RoomOutputListener roomOutputListener) {
+	public RoomConnector(String roomName, boolean isEmpty, RoomOutputListener roomOutputListener) {
 		super(roomName);
 		this.communationSafe = false;
 		this.roomOutputListener = roomOutputListener;	
@@ -61,7 +59,7 @@ public class RoomConnector extends Connector implements MessageListener, RoomMes
 			e.printStackTrace();
 		}
 		distributedDH = new DistributedDH(this);
-		distributedDH.addClientToRoom();
+		distributedDH.addClientToRoom(isEmpty);
 	}
 
 	@Override

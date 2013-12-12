@@ -5,7 +5,7 @@ rem
 rem $Id: stub.bat,v 1.1 2004/11/26 02:59:09 tanderson Exp $
 rem ---------------------------------------------------------------------------
 
-set JAVA_HOME=C:\Program Files\Java\jdk1.7.0_09\jre
+set JAVA_HOME=C:\Program Files\Java\jdk1.7.0_45\jre
 
 if "%OS%" == "Windows_NT" setlocal
 

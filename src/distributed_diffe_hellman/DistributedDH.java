@@ -1,4 +1,4 @@
-package secure_message;
+package distributed_diffe_hellman;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
@@ -25,11 +25,11 @@ public class DistributedDH {
 		this.roomConnector = roomConnector;
 	}
 	
-	public void addClientToRoom(){	
+	public void addClientToRoom(boolean isEmpty){	
 		final SecureRandom rand = new SecureRandom();
 		communicationSafe = false;
 		roomConnector.setCommunicationSafe(false);
-		hasLatestPartialSet = true;
+		hasLatestPartialSet = isEmpty;
 		waitingOnPartialsPackageReply = true;
 		clientID = new BigInteger(256, rand);
 		privateKey = new BigInteger(256, rand);
