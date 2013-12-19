@@ -81,9 +81,9 @@ public class DistributedDH {
 		return communicationSafe;
 	}
 	
-	public BigInteger getSharedKey(){
+	public DistributedDHPartial getSharedKey(){
 		if(communicationSafe){
-			return sharedKey.getValue();
+			return sharedKey;
 		}else{
 			return null;
 		}
